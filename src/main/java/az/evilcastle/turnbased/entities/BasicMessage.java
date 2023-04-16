@@ -11,6 +11,4 @@ public class BasicMessage {
     private String content;
     private String name;
     private String msgTime;
-
-
 }
