@@ -1,4 +1,4 @@
-package az.evilcastle.turnbased.entities;
+package az.evilcastle.turnbased.enums;
 
 public enum SessionStatus {
     WAITING(0),
