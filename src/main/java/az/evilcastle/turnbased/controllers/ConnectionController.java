@@ -16,11 +16,4 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ConnectionController {
 
-    @MessageMapping("/start")
-    @SendTo("/topic/hello")
-    public String handleMessage(@Payload String mess) {
-
-        System.out.println("IN handleMessage");
-        return "handleMessage: " + mess;
-    }
 }

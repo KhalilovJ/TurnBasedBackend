@@ -1,7 +1,7 @@
 package az.evilcastle.turnbased.entities;
 
 
-import az.evilcastle.turnbased.enums.SessionStatus;
+import az.evilcastle.turnbased.enums.BatchStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +17,5 @@ public class Session {
 
     long id;
 
-    SessionStatus sessionStatus;
+    BatchStatus batchStatus;
 }
