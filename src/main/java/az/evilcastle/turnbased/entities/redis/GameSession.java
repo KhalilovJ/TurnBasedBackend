@@ -1,12 +1,15 @@
 package az.evilcastle.turnbased.entities.redis;
 
 
-import az.evilcastle.turnbased.enums.BatchStatus;
+import az.evilcastle.turnbased.enums.GameStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.socket.WebSocketSession;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +18,6 @@ import lombok.experimental.FieldDefaults;
 public class GameSession {
 
     long id;
-    BatchStatus batchStatus;
+    GameStatus gameStatus;
+    List<WebSocketSession> socketSessions;
 }

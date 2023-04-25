@@ -1,12 +1,12 @@
 package az.evilcastle.turnbased.enums;
 
-public enum BatchStatus {
+public enum GameStatus {
     WAITING(0),
     STARTED(1);
 
     private int statusCode;
 
-    BatchStatus(int statusCode) {
+    GameStatus(int statusCode) {
         this.statusCode = statusCode;
     }
 

@@ -12,15 +12,11 @@ public class ServerWebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler(), "/websocket");
-//        registry.addHandler(webSocketHandler(), "/start/{id}");
+        registry.addHandler(webSocketHandler(), "/myHandler");
     }
 
     @Bean
     public WebSocketHandler webSocketHandler() {
         return new ServerWebSocketHandler();
     }
-
-//    public WebSocketHandler startSockethandler() { return new }
-
 }

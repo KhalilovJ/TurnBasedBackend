@@ -1,8 +1,14 @@
 package az.evilcastle.turnbased.handlers;
 
+import az.evilcastle.turnbased.entities.RequestMessage;
+import az.evilcastle.turnbased.entities.redis.GameSession;
+import az.evilcastle.turnbased.services.interfaces.GameSessionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
@@ -15,19 +21,25 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ServerWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
-    private final Set<WebSocketSession> sessions = new CopyOnWriteArraySet<>();
+    private final Set<WebSocketSession> webSocketSessions = new CopyOnWriteArraySet<>();
+    private final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
+
+    @Autowired
+    GameSessionService gameSessionService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info("Server connection opened");
-        sessions.add(session);
+        webSocketSessions.add(session);
         System.out.println(session);
+
 
         TextMessage message = new TextMessage("one-time message from server");
         logger.info("Server sends: {}", message);
@@ -37,18 +49,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         logger.info("Server connection closed: {}", status);
-        sessions.remove(session);
-    }
-
-    @Scheduled(fixedRate = 10000)
-    void sendPeriodicMessages() throws IOException {
-        for (WebSocketSession session : sessions) {
-            if (session.isOpen()) {
-                String broadcast = "server periodic message " + LocalDateTime.now();
-                logger.info("Server sends: {}", broadcast);
-                session.sendMessage(new TextMessage(broadcast));
-            }
-        }
+        webSocketSessions.remove(session);
     }
 
     @Override
@@ -56,7 +57,13 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
         String request = message.getPayload();
         logger.info("Server received: {}", request);
 
-        String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(request));
+        RequestMessage requestMessage = new ObjectMapper().readValue(request, RequestMessage.class);
+
+        gameSessionService.distributeRequest(session, requestMessage);
+
+
+//        String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(request));
+        String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(requestMessage.toString()));
         logger.info("Server sends: {}", response);
         session.sendMessage(new TextMessage(response));
     }
@@ -70,4 +77,15 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     public List<String> getSubProtocols() {
         return Collections.singletonList("subprotocol.demo.websocket");
     }
+
+    //    @Scheduled(fixedRate = 10000)
+//    void sendPeriodicMessages() throws IOException {
+//        for (WebSocketSession session : sessions) {
+//            if (session.isOpen()) {
+//                String broadcast = "server periodic message " + LocalDateTime.now();
+//                logger.info("Server sends: {}", broadcast);
+//                session.sendMessage(new TextMessage(broadcast));
+//            }
+//        }
+//    }
 }
