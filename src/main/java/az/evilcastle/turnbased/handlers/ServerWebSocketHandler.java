@@ -27,15 +27,18 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
-@AllArgsConstructor
 public class ServerWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
     private final Set<WebSocketSession> webSocketSessions = new CopyOnWriteArraySet<>();
-    private final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
+    private ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();;
 
     GameSessionService gameSessionService;
+
+    public ServerWebSocketHandler(GameSessionService gameSessionService) {
+        this.gameSessionService = gameSessionService;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -62,6 +65,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
 
         gameSessionService.distributeRequest(session, requestMessage);
 
+        gameSessions = gameSessionService.getAllGameSession();
 
 //        String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(request));
         String response = String.format("response from server to '%s'", HtmlUtils.htmlEscape(requestMessage.toString()));
