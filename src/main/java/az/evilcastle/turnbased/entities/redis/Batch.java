@@ -1,4 +1,4 @@
-package az.evilcastle.turnbased.entities;
+package az.evilcastle.turnbased.entities.redis;
 
 
 import az.evilcastle.turnbased.enums.BatchStatus;
@@ -8,14 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Session {
+public class GameSession {
 
     long id;
-
     BatchStatus batchStatus;
 }
