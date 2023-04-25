@@ -4,10 +4,12 @@ import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
@@ -24,6 +26,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Component
+@AllArgsConstructor
 public class ServerWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerWebSocketHandler.class);
@@ -31,15 +35,12 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     private final Set<WebSocketSession> webSocketSessions = new CopyOnWriteArraySet<>();
     private final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
 
-    @Autowired
     GameSessionService gameSessionService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info("Server connection opened");
         webSocketSessions.add(session);
-        System.out.println(session);
-
 
         TextMessage message = new TextMessage("one-time message from server");
         logger.info("Server sends: {}", message);
