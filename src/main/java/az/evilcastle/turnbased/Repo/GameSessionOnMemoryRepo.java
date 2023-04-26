@@ -6,11 +6,13 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 public class GameSessionOnMemoryRepo {
 
     private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
+    private static final ConcurrentMap<String, GameSession> players = new ConcurrentReferenceHashMap<>();
 
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
@@ -25,13 +27,35 @@ public class GameSessionOnMemoryRepo {
         GameSession gameSession = gameSessions.get(requestMessage.getId());
 
         gameSession.getSocketSessions().add(webSocketSession.getId());
+        players.putIfAbsent(webSocketSession.getId(), gameSession);
     }
 
     public ConcurrentMap<Long, GameSession> getAllActiveGameSessions() {
         return gameSessions;
     }
 
+    public ConcurrentMap<String, GameSession> getAllActivePlayers() {
+        return players;
+    }
+
     public GameSession getGameSession(Long id) {
         return gameSessions.get(id);
+    }
+
+    public void removePlayer(WebSocketSession webSocketSession) {
+        long id = players.get(webSocketSession.getId()).getId();
+
+        List<String> sessions = gameSessions.get(id).getSocketSessions();
+
+        sessions.remove(webSocketSession.getId());
+
+        if (sessions.isEmpty()) {
+            removeGameSession(id);
+        }
+
+    }
+
+    public void removeGameSession(long id) {
+        gameSessions.remove(id);
     }
 }

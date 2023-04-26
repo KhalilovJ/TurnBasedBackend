@@ -18,10 +18,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public void join(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
-        System.out.println("IN join |  webSocketSession: " + webSocketSession + " requestMessage: "+ requestMessage);
-        System.out.println("DO " + gameSessionOnMemoryRepo.getAllActiveGameSessions());
         gameSessionOnMemoryRepo.addGameSession(webSocketSession, requestMessage);
-        System.out.println("POSLE " + gameSessionOnMemoryRepo.getAllActiveGameSessions());
     }
 
     @Override
@@ -45,5 +42,21 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public GameSession getGameSession(Long id) {
         return gameSessionOnMemoryRepo.getGameSession(id);
+    }
+
+    @Override
+    public void removePlayer(WebSocketSession webSocketSession) {
+
+        gameSessionOnMemoryRepo.removePlayer(webSocketSession);
+    }
+
+    @Override
+    public void removeGameSession(long id) {
+        gameSessionOnMemoryRepo.removeGameSession(id);
+    }
+
+    @Override
+    public ConcurrentMap<String, GameSession> getAllActivePlayers() {
+        return gameSessionOnMemoryRepo.getAllActivePlayers();
     }
 }
