@@ -13,7 +13,7 @@ public class ServerWebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler(), "/myHandler");
+        registry.addHandler(webSocketHandler(), "/rubicon");
     }
 
     @Bean
