@@ -43,16 +43,17 @@ public class GameSessionOnMemoryRepo {
     }
 
     public void removePlayer(WebSocketSession webSocketSession) {
-        long id = players.get(webSocketSession.getId()).getId();
+        String playerId = webSocketSession.getId();
+        long gameSessionId = players.get(playerId).getId();
 
-        List<String> sessions = gameSessions.get(id).getSocketSessions();
+        List<String> playerList = gameSessions.get(gameSessionId).getSocketSessions();
 
-        sessions.remove(webSocketSession.getId());
+        playerList.remove(playerId);
+        players.remove(playerId);
 
-        if (sessions.isEmpty()) {
-            removeGameSession(id);
+        if (playerList.isEmpty()) {
+            removeGameSession(gameSessionId);
         }
-
     }
 
     public void removeGameSession(long id) {
