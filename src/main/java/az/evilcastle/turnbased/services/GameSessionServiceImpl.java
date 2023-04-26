@@ -41,4 +41,9 @@ public class GameSessionServiceImpl implements GameSessionService {
     public ConcurrentMap<Long, GameSession> getAllGameSession() {
         return gameSessionOnMemoryRepo.getAllActiveGameSessions();
     }
+
+    @Override
+    public GameSession getGameSession(Long id) {
+        return gameSessionOnMemoryRepo.getGameSession(id);
+    }
 }

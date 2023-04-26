@@ -14,4 +14,5 @@ public interface GameSessionService {
 
     ConcurrentMap<Long, GameSession> getAllGameSession();
 
+    GameSession getGameSession(Long id);
 }

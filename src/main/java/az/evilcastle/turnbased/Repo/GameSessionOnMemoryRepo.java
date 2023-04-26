@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class GameSessionOnMemoryRepo {
 
-    private final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
+    private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
 
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
@@ -24,10 +24,14 @@ public class GameSessionOnMemoryRepo {
 
         GameSession gameSession = gameSessions.get(requestMessage.getId());
 
-        gameSession.getSocketSessions().add(webSocketSession);
+        gameSession.getSocketSessions().add(webSocketSession.getId());
     }
 
     public ConcurrentMap<Long, GameSession> getAllActiveGameSessions() {
         return gameSessions;
+    }
+
+    public GameSession getGameSession(Long id) {
+        return gameSessions.get(id);
     }
 }
