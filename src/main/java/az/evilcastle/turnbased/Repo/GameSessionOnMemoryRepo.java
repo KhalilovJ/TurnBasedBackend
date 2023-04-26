@@ -2,6 +2,7 @@ package az.evilcastle.turnbased.Repo;
 
 import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
+import az.evilcastle.turnbased.enums.GameStatus;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -18,7 +19,7 @@ public class GameSessionOnMemoryRepo {
 
         long id = requestMessage.getId();
 
-        gameSessions.putIfAbsent(id, GameSession.builder().id(id).socketSessions(new ArrayList<>()).build());
+        gameSessions.putIfAbsent(id, GameSession.builder().id(id).gameStatus(GameStatus.WAITING).socketSessions(new ArrayList<>()).build());
         addPlayer(webSocketSession, requestMessage);
     }
 
