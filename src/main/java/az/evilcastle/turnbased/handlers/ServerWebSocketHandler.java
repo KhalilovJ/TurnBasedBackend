@@ -32,7 +32,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     private static final Logger logger = LoggerFactory.getLogger(ServerWebSocketHandler.class);
 
     private final Set<WebSocketSession> webSocketSessions = new CopyOnWriteArraySet<>();
-    private ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();;
+    private ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
 
     GameSessionService gameSessionService;
 
@@ -53,6 +53,8 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         logger.info("Server connection closed: {}", status);
+
+        gameSessionService.removePlayer(session);
         webSocketSessions.remove(session);
     }
 

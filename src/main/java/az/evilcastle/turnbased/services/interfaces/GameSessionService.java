@@ -14,4 +14,12 @@ public interface GameSessionService {
 
     ConcurrentMap<Long, GameSession> getAllGameSession();
 
+    GameSession getGameSession(Long id);
+
+    void removePlayer(WebSocketSession webSocketSession);
+
+    void removeGameSession(long id);
+
+    ConcurrentMap<String, GameSession> getAllActivePlayers();
+
 }
