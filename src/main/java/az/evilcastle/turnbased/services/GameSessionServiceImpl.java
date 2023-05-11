@@ -28,6 +28,9 @@ public class GameSessionServiceImpl implements GameSessionService {
             case "join":
                 join(webSocketSession, requestMessage);
                 break;
+            case "move":
+
+                break;
             default:
                 //TODO exception handler for WRONG REQUEST TYPE
                 System.out.println("WRONG REQUEST TYPE");

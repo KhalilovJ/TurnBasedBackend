@@ -13,4 +13,5 @@ public class RequestMessage {
 
     long id;
     String type;
+    String payload;
 }
