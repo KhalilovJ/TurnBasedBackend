@@ -1,5 +1,6 @@
 package az.evilcastle.turnbased.entities;
 
+import az.evilcastle.turnbased.enums.MessageType;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

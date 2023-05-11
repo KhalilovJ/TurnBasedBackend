@@ -20,4 +20,5 @@ public class GameSession {
     long id;
     GameStatus gameStatus;
     List<String> socketSessions;
+    List<WebSocketSession> webSocketSessions;
 }
