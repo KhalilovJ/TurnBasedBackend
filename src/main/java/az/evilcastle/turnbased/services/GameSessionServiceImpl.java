@@ -26,7 +26,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public void join(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
-        gameSessionOnMemoryRepo.addGameSession(webSocketSession, requestMessage);
+        gameSessionOnMemoryRepo.addGameSession(webSocketSession, requestMessage, this);
     }
 
     @Override

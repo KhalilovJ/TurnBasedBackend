@@ -3,6 +3,7 @@ package az.evilcastle.turnbased.entities.redis;
 
 import az.evilcastle.turnbased.enums.GameStatus;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,5 +21,6 @@ public class GameSession {
     long id;
     GameStatus gameStatus;
     List<String> socketSessions;
+    @JsonIgnore
     List<WebSocketSession> webSocketSessions;
 }

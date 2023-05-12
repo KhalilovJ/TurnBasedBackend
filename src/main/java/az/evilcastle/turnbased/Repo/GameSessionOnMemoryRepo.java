@@ -5,15 +5,16 @@ import az.evilcastle.turnbased.entities.redis.GameSession;
 import az.evilcastle.turnbased.enums.GameStatus;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
-
+@Component
 public class GameSessionOnMemoryRepo {
-
     private GameSessionService gameSessionService;
     private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
     private static final ConcurrentMap<String, Long> players = new ConcurrentReferenceHashMap<>();
@@ -22,7 +23,11 @@ public class GameSessionOnMemoryRepo {
         gameSessionService = gameSessionServiceIn;
     }
 
-    public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage) {
+    public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage, GameSessionService gss) {
+
+        if (gameSessionService == null){
+            gameSessionService = gss;
+        }
 
         long id = requestMessage.getId();
 
@@ -40,7 +45,7 @@ public class GameSessionOnMemoryRepo {
 
         if (gameSession.getSocketSessions().size()>1){
             gameSession.setGameStatus(GameStatus.STARTED);
-            gameSessionService.SendMessageToSession(requestMessage.getId(), "game started");
+            gameSessionService.SendMessageToSession(requestMessage.getId(), "game started message from server");
         }
 
         players.putIfAbsent(webSocketSession.getId(), gameSession.getId());
