@@ -24,4 +24,6 @@ public interface GameSessionService {
 
     void SendMessageToSession(Long sessionId, String message);
 
+    void gameMessageReceived(String sessionId, RequestMessage requestMessage);
+
 }

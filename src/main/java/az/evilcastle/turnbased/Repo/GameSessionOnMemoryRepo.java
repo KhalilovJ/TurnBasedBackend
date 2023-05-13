@@ -45,7 +45,12 @@ public class GameSessionOnMemoryRepo {
 
         if (gameSession.getSocketSessions().size()>1){
             gameSession.setGameStatus(GameStatus.STARTED);
-            gameSessionService.SendMessageToSession(requestMessage.getId(), "game started message from server");
+            RequestMessage rm = RequestMessage.builder()
+                    .type("CONNECTION")
+                    .payload("game started")
+                    .build();
+            System.out.println(rm.toJson());
+            gameSessionService.SendMessageToSession(requestMessage.getId(), rm.toJson());
         }
 
         players.putIfAbsent(webSocketSession.getId(), gameSession.getId());

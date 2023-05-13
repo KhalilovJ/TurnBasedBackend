@@ -1,9 +1,12 @@
 package az.evilcastle.turnbased.services;
 
 import az.evilcastle.turnbased.Repo.GameSessionOnMemoryRepo;
+import az.evilcastle.turnbased.entities.MoveEntity;
 import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +41,7 @@ public class GameSessionServiceImpl implements GameSessionService {
                 join(webSocketSession, requestMessage);
                 break;
             case "GAMEACTION":
-
+                gameMessageReceived(webSocketSession.getId(), requestMessage);
                 break;
             default:
                 //TODO exception handler for WRONG REQUEST TYPE
@@ -82,5 +85,19 @@ public class GameSessionServiceImpl implements GameSessionService {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Override
+    public void gameMessageReceived(String sessionId, RequestMessage requestMessage){
+        ObjectMapper objectMapper = new ObjectMapper();
+        MoveEntity moveEntity = null;
+
+        try {
+            moveEntity = objectMapper.readValue(requestMessage.getPayload(), MoveEntity.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(moveEntity + " sessionId: " +  sessionId);
     }
 }
