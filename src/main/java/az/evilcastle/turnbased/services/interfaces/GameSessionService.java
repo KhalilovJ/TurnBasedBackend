@@ -20,6 +20,10 @@ public interface GameSessionService {
 
     void removeGameSession(long id);
 
-    ConcurrentMap<String, GameSession> getAllActivePlayers();
+    ConcurrentMap<String, Long> getAllActivePlayers();
+
+    void SendMessageToSession(Long sessionId, String message);
+
+    void gameMessageReceived(String sessionId, RequestMessage requestMessage);
 
 }
