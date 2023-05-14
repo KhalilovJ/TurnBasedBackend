@@ -19,10 +19,6 @@ public class GameSessionOnMemoryRepo {
     private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
     private static final ConcurrentMap<String, Long> players = new ConcurrentReferenceHashMap<>();
 
-    public void setGameSessionService(GameSessionService gameSessionServiceIn){
-        gameSessionService = gameSessionServiceIn;
-    }
-
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage, GameSessionService gss) {
 
         if (gameSessionService == null){
@@ -31,7 +27,13 @@ public class GameSessionOnMemoryRepo {
 
         long id = requestMessage.getId();
 
-        gameSessions.putIfAbsent(id, GameSession.builder().id(id).webSocketSessions(new ArrayList<>()).gameStatus(GameStatus.WAITING).socketSessions(new ArrayList<>()).build());
+        gameSessions.putIfAbsent(id, GameSession.builder()
+                .id(id)
+                .webSocketSessions(new ArrayList<>())
+                .gameStatus(GameStatus.WAITING)
+                .socketSessions(new ArrayList<>())
+                .build());
+
         addPlayer(webSocketSession, requestMessage);
     }
 
@@ -54,7 +56,6 @@ public class GameSessionOnMemoryRepo {
         }
 
         players.putIfAbsent(webSocketSession.getId(), gameSession.getId());
-
     }
 
     public ConcurrentMap<Long, GameSession> getAllActiveGameSessions() {

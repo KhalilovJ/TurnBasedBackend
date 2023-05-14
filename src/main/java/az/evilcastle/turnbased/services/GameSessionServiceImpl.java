@@ -8,6 +8,8 @@ import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -17,35 +19,25 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentMap;
 
 @Service
+@AllArgsConstructor
 public class GameSessionServiceImpl implements GameSessionService {
 
-    private final GameSessionOnMemoryRepo gameSessionOnMemoryRepo = new GameSessionOnMemoryRepo();
-
-    @PostConstruct
-    private void init(){
-        gameSessionOnMemoryRepo.setGameSessionService(this);
-    }
+    private final GameSessionOnMemoryRepo gameSessionOnMemoryRepo;
 
     @Override
     public void join(WebSocketSession webSocketSession, RequestMessage requestMessage) {
-
         gameSessionOnMemoryRepo.addGameSession(webSocketSession, requestMessage, this);
     }
 
     @Override
     public void distributeRequest(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
-
         switch (requestMessage.getType()) {
-            case "CONNECTION":
-                join(webSocketSession, requestMessage);
-                break;
-            case "GAMEACTION":
-                gameMessageReceived(webSocketSession.getId(), requestMessage);
-                break;
-            default:
+            case "CONNECTION" -> join(webSocketSession, requestMessage);
+            case "GAMEACTION" -> gameMessageReceived(webSocketSession.getId(), requestMessage);
+            default ->
                 //TODO exception handler for WRONG REQUEST TYPE
-                System.out.println("WRONG REQUEST TYPE");
+                    System.out.println("WRONG REQUEST TYPE");
         }
     }
 
@@ -61,7 +53,6 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public void removePlayer(WebSocketSession webSocketSession) {
-
         gameSessionOnMemoryRepo.removePlayer(webSocketSession);
     }
 
@@ -90,7 +81,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     @Override
     public void gameMessageReceived(String sessionId, RequestMessage requestMessage){
         ObjectMapper objectMapper = new ObjectMapper();
-        MoveEntity moveEntity = null;
+        MoveEntity moveEntity;
 
         try {
             moveEntity = objectMapper.readValue(requestMessage.getPayload(), MoveEntity.class);
