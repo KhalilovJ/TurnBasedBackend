@@ -48,7 +48,11 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public GameSession getGameSession(Long id) {
-        return gameSessionOnMemoryRepo.getGameSession(id);
+        GameSession gs = gameSessionOnMemoryRepo.getGameSession(id);
+        System.out.println(id + "game session test: " + gs);
+        gameSessionOnMemoryRepo.printAllSessions(id);
+//        return gs;
+        return null;
     }
 
     @Override
@@ -88,6 +92,9 @@ public class GameSessionServiceImpl implements GameSessionService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+
+        MoveEntity moveEntityT = MoveEntity.builder().who("16").where("test").action("move").build();
+        SendMessageToSession(sessionId, RequestMessage.builder().type("GAMEACTION").payload(moveEntityT.toString()).build().toString());
 
         System.out.println(moveEntity + " sessionId: " +  sessionId);
     }

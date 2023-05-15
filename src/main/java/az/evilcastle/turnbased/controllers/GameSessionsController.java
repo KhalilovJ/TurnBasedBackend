@@ -25,7 +25,7 @@ public class GameSessionsController {
     }
 
     @GetMapping("/GameSessions/{id}")
-    GameSession getGameSession(@PathVariable String id) {
-        return gameSessionService.getGameSession(Long.parseLong(id));
+    GameSession getGameSession(@PathVariable Long id) {
+        return gameSessionService.getGameSession(id);
     }
 }

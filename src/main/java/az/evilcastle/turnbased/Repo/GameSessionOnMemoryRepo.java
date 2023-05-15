@@ -52,7 +52,7 @@ public class GameSessionOnMemoryRepo {
                     .payload("game started")
                     .build();
             System.out.println(rm.toJson());
-            gameSessionService.SendMessageToSession(requestMessage.getId(), rm.toJson());
+//            gameSessionService.SendMessageToSession(webSocketSession.getId(), rm.toJson());
         }
 
         players.putIfAbsent(webSocketSession.getId(), gameSession.getId());
@@ -86,5 +86,9 @@ public class GameSessionOnMemoryRepo {
 
     public void removeGameSession(long id) {
         gameSessions.remove(id);
+    }
+
+    public void printAllSessions(Long id){
+        System.out.println(gameSessions.get(id));
     }
 }
