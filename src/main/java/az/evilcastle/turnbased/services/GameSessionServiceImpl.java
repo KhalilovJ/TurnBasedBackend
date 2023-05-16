@@ -96,10 +96,9 @@ public class GameSessionServiceImpl implements GameSessionService {
             throw new RuntimeException(e);
         }
 
-        MoveEntity moveEntityT = MoveEntity.builder().who("16").where("test").action("move").build();
-        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type("GAMEACTION").payload(moveEntityT.toString()).build().toString());
+        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type("GAMEACTION").payload(moveEntity.toJson("*")).build().toJson());
 
-        System.out.println(moveEntity + " sessionId: " +  userId);
+//        System.out.println(moveEntity + " sessionId: " +  userId);
     }
 
 }
