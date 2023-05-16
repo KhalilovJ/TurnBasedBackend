@@ -33,6 +33,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     public void distributeRequest(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
         switch (requestMessage.getType()) {
+            case "CREATE" -> System.out.println("CREATE");
             case "CONNECTION" -> join(webSocketSession, requestMessage);
             case "GAMEACTION" -> gameMessageReceived(webSocketSession.getId(), requestMessage);
             default ->
@@ -83,9 +84,11 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public void gameMessageReceived(String sessionId, RequestMessage requestMessage){
+    public void gameMessageReceived(String userId, RequestMessage requestMessage){
         ObjectMapper objectMapper = new ObjectMapper();
         MoveEntity moveEntity;
+
+        GameSession gameSession = gameSessionOnMemoryRepo.getUsersSession(userId);
 
         try {
             moveEntity = objectMapper.readValue(requestMessage.getPayload(), MoveEntity.class);
@@ -94,8 +97,9 @@ public class GameSessionServiceImpl implements GameSessionService {
         }
 
         MoveEntity moveEntityT = MoveEntity.builder().who("16").where("test").action("move").build();
-        SendMessageToSession(sessionId, RequestMessage.builder().type("GAMEACTION").payload(moveEntityT.toString()).build().toString());
+        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type("GAMEACTION").payload(moveEntityT.toString()).build().toString());
 
-        System.out.println(moveEntity + " sessionId: " +  sessionId);
+        System.out.println(moveEntity + " sessionId: " +  userId);
     }
+
 }

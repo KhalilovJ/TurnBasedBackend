@@ -4,6 +4,7 @@ import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
 import az.evilcastle.turnbased.enums.GameStatus;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 @Component
+@Log4j2
 public class GameSessionOnMemoryRepo {
     private GameSessionService gameSessionService;
     private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
@@ -51,11 +53,13 @@ public class GameSessionOnMemoryRepo {
                     .type("CONNECTION")
                     .payload("game started")
                     .build();
-            System.out.println(rm.toJson());
+
+            log.info(rm.toJson());
 //            gameSessionService.SendMessageToSession(webSocketSession.getId(), rm.toJson());
         }
 
-        players.putIfAbsent(webSocketSession.getId(), gameSession.getId());
+        log.info("add player " + webSocketSession.getId() + " " + requestMessage.getId());
+        players.put(webSocketSession.getId(), requestMessage.getId());
     }
 
     public ConcurrentMap<Long, GameSession> getAllActiveGameSessions() {
@@ -90,5 +94,9 @@ public class GameSessionOnMemoryRepo {
 
     public void printAllSessions(Long id){
         System.out.println(gameSessions.get(id));
+    }
+    public GameSession getUsersSession(String sessionKey){
+        Long sessionId = players.get(sessionKey);
+        return gameSessions.get(sessionId);
     }
 }

@@ -28,4 +28,5 @@ public class GameSessionsController {
     GameSession getGameSession(@PathVariable Long id) {
         return gameSessionService.getGameSession(id);
     }
+
 }
