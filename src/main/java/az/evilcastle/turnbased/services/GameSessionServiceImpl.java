@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class GameSessionServiceImpl implements GameSessionService {
 
     private final GameSessionOnMemoryRepo gameSessionOnMemoryRepo;
@@ -91,12 +93,17 @@ public class GameSessionServiceImpl implements GameSessionService {
         GameSession gameSession = gameSessionOnMemoryRepo.getUsersSession(userId);
 
         try {
+
             moveEntity = objectMapper.readValue(requestMessage.getPayload(), MoveEntity.class);
+            moveEntity.setUserId(gameSession.getUserInGameId(userId));
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type("GAMEACTION").payload(moveEntity.toJson("*")).build().toJson());
+        String msg = moveEntity.toJson("*");
+        log.info("Message " + msg);
+        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type("GAMEACTION").payload(msg).build().toJson());
 
 //        System.out.println(moveEntity + " sessionId: " +  userId);
     }

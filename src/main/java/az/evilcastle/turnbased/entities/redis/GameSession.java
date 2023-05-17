@@ -30,4 +30,8 @@ public class GameSession {
         webSocketSessionHashMap.put(session.getId(), id);
     }
 
+    public Integer getUserInGameId(String session){
+        return webSocketSessionHashMap.get(session);
+    }
+
 }
