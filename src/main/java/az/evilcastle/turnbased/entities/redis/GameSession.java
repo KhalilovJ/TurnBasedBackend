@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -18,7 +19,15 @@ public class GameSession {
 
     long id;
     GameStatus gameStatus;
-    List<String> socketSessions;
+//    List<String> socketSessions;
     @JsonIgnore
     List<WebSocketSession> webSocketSessions;
+    @JsonIgnore
+    HashMap<String, Integer> webSocketSessionHashMap;
+
+    public void addWebSocketSession(WebSocketSession session, Integer id){
+        webSocketSessions.add(session);
+        webSocketSessionHashMap.put(session.getId(), id);
+    }
+
 }

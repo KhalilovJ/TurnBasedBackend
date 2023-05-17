@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MoveEntity {
 
+    Integer userId;
     @JsonProperty("who")
     String who;
     @JsonProperty("action")
@@ -22,6 +23,7 @@ public class MoveEntity {
 
         String st =  "{*who*:*" + who + "*," +
                 "*action*:*" + action + "*," +
+                "*userId*:*" + userId + "*," +
                 "*where*:*" + where +"*}";
 
         st = st.replace("*", divider);

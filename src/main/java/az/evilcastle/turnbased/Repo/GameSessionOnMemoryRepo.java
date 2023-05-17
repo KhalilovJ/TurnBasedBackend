@@ -12,6 +12,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 @Component
@@ -32,8 +33,9 @@ public class GameSessionOnMemoryRepo {
         gameSessions.putIfAbsent(id, GameSession.builder()
                 .id(id)
                 .webSocketSessions(new ArrayList<>())
+                .webSocketSessionHashMap(new HashMap<>())
                 .gameStatus(GameStatus.WAITING)
-                .socketSessions(new ArrayList<>())
+//                .socketSessions(new ArrayList<>())
                 .build());
 
         addPlayer(webSocketSession, requestMessage);
@@ -43,11 +45,10 @@ public class GameSessionOnMemoryRepo {
 
         GameSession gameSession = gameSessions.get(requestMessage.getId());
 
-        gameSession.getWebSocketSessions().add(webSocketSession);
+//        gameSession.getWebSocketSessions().add(webSocketSession);
+//        gameSession.getSocketSessions().add(webSocketSession.getId());
 
-        gameSession.getSocketSessions().add(webSocketSession.getId());
-
-        if (gameSession.getSocketSessions().size()>1){
+        if (gameSession.getWebSocketSessions().size()>0){
             gameSession.setGameStatus(GameStatus.STARTED);
             RequestMessage rm = RequestMessage.builder()
                     .type("CONNECTION")
@@ -58,7 +59,10 @@ public class GameSessionOnMemoryRepo {
 //            gameSessionService.SendMessageToSession(webSocketSession.getId(), rm.toJson());
         }
 
-        log.info("add player " + webSocketSession.getId() + " " + requestMessage.getId());
+        log.info("Adding player " + webSocketSession.getId() + " " + requestMessage.getId());
+
+        gameSession.addWebSocketSession(webSocketSession, gameSession.getWebSocketSessions().size());
+
         players.put(webSocketSession.getId(), requestMessage.getId());
     }
 
@@ -78,14 +82,15 @@ public class GameSessionOnMemoryRepo {
         String playerId = webSocketSession.getId();
         long gameSessionId = players.get(playerId);
 
-        List<String> playerList = gameSessions.get(gameSessionId).getSocketSessions();
+//        TODO Murad, Fix it
+//        List<String> playerList = gameSessions.get(gameSessionId).getSocketSessions();
 
-        playerList.remove(playerId);
-        players.remove(playerId);
-
-        if (playerList.isEmpty()) {
-            removeGameSession(gameSessionId);
-        }
+//        playerList.remove(playerId);
+//        players.remove(playerId);
+//
+//        if (playerList.isEmpty()) {
+//            removeGameSession(gameSessionId);
+//        }
     }
 
     public void removeGameSession(long id) {
