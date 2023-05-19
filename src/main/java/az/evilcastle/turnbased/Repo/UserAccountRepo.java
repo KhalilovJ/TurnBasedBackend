@@ -7,10 +7,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserAccountRepo extends JpaRepository<UserAccount, Long> {
 
     @Query("SELECT u FROM UserAccount u")
     List<UserAccount> getAllUserAccounts();
+
+//    Optional<UserAccount> findByEmail(String email);
 }

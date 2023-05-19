@@ -1,2 +1,6 @@
-package az.evilcastle.turnbased.config;public interface JwtService {
+package az.evilcastle.turnbased.services.interfaces;
+
+public interface JwtService {
+
+    String extractUsername(String jwt);
 }
