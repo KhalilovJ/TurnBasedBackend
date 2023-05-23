@@ -55,8 +55,10 @@ public class GameSessionOnMemoryRepo {
                     .payload("game started")
                     .build();
 
+//            GameSession usersSession = getUsersSession(webSocketSession.getId());
+
             log.info(rm.toJson());
-//            gameSessionService.SendMessageToSession(webSocketSession.getId(), rm.toJson());
+            gameSessionService.SendMessageToSession(requestMessage.getId(), rm.toJson());
         }
 
         log.info("Adding player " + webSocketSession.getId() + " " + requestMessage.getId());
@@ -101,7 +103,10 @@ public class GameSessionOnMemoryRepo {
         System.out.println(gameSessions.get(id));
     }
     public GameSession getUsersSession(String sessionKey){
+
         Long sessionId = players.get(sessionKey);
+        System.out.println("session id is " + sessionId);
+        System.out.println(gameSessions.get(sessionId).getId());
         return gameSessions.get(sessionId);
     }
 }
