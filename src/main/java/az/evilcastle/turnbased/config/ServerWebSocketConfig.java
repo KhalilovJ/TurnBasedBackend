@@ -1,5 +1,6 @@
 package az.evilcastle.turnbased.config;
 
+import az.evilcastle.turnbased.Repo.GameSessionOnMemoryRepo;
 import az.evilcastle.turnbased.handlers.ServerWebSocketHandler;
 import az.evilcastle.turnbased.services.GameSessionServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,6 @@ public class ServerWebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public WebSocketHandler webSocketHandler() {
-        return new ServerWebSocketHandler(new GameSessionServiceImpl());
+        return new ServerWebSocketHandler(new GameSessionServiceImpl(new GameSessionOnMemoryRepo()));
     }
 }
