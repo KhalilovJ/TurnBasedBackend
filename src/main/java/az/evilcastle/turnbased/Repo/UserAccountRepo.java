@@ -16,4 +16,6 @@ public interface UserAccountRepo extends JpaRepository<UserAccount, Long> {
     List<UserAccount> getAllUserAccounts();
 
 //    Optional<UserAccount> findByEmail(String email);
+
+    UserAccountRepo findByEmail(String username);
 }
