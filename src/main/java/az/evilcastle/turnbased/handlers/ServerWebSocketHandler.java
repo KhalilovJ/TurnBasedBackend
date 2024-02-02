@@ -1,12 +1,10 @@
 package az.evilcastle.turnbased.handlers;
 
 import az.evilcastle.turnbased.entities.RequestMessage;
-import az.evilcastle.turnbased.entities.redis.GameSession;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
@@ -17,7 +15,6 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
@@ -68,7 +65,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
-        log.info("Server transport error: {}", exception.getMessage());
+        log.error("Server transport error: {}", exception.getMessage());
     }
 
     @Override

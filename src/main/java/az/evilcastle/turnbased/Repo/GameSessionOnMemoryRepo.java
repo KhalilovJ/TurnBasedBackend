@@ -13,6 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
+
 @Component
 @Slf4j
 public class GameSessionOnMemoryRepo {
@@ -22,7 +23,7 @@ public class GameSessionOnMemoryRepo {
 
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage, GameSessionService gss) {
 
-        if (gameSessionService == null){
+        if (gameSessionService == null) {
             gameSessionService = gss;
         }
 
@@ -46,7 +47,7 @@ public class GameSessionOnMemoryRepo {
 //        gameSession.getWebSocketSessions().add(webSocketSession);
 //        gameSession.getSocketSessions().add(webSocketSession.getId());
 
-        if (gameSession.getWebSocketSessions().size()>0){
+        if (gameSession.getWebSocketSessions().size() > 0) {
             gameSession.setGameStatus(GameStatus.STARTED);
             RequestMessage rm = RequestMessage.builder()
                     .type(GameActionType.CONNECTION)
@@ -82,25 +83,23 @@ public class GameSessionOnMemoryRepo {
         String playerId = webSocketSession.getId();
         long gameSessionId = players.get(playerId);
 
-//        TODO Murad, Fix it
-//        List<String> playerList = gameSessions.get(gameSessionId).getSocketSessions();
+        var sessions = gameSessions.get(gameSessionId).getWebSocketSessions();
 
-//        playerList.remove(playerId);
-//        players.remove(playerId);
-//
-//        if (playerList.isEmpty()) {
-//            removeGameSession(gameSessionId);
-//        }
+        sessions.remove(webSocketSession);
+        players.remove(playerId);
+
+        if (sessions.isEmpty()) removeGameSession(gameSessionId);
     }
 
     public void removeGameSession(long id) {
         gameSessions.remove(id);
     }
 
-    public void printAllSessions(Long id){
+    public void printAllSessions(Long id) {
         log.info(gameSessions.get(id).toString());
     }
-    public GameSession getUsersSession(String sessionKey){
+
+    public GameSession getUsersSession(String sessionKey) {
 
         Long sessionId = players.get(sessionKey);
         log.info("session id is " + sessionId);
