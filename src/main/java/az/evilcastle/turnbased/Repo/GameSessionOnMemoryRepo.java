@@ -49,15 +49,15 @@ public class GameSessionOnMemoryRepo {
 
         if (!gameSession.getWebSocketSessions().isEmpty()) {
             gameSession.setGameStatus(GameStatus.STARTED);
-            RequestMessage rm = RequestMessage.builder()
+            RequestMessage requestMessageCreated = RequestMessage.builder()
                     .type(GameActionType.CONNECTION)
                     .payload("game started")
                     .build();
 
 //            GameSession usersSession = getUsersSession(webSocketSession.getId());
 
-            log.info(rm.toJson());
-            gameSessionService.SendMessageToSession(requestMessage.getId(), rm.toJson());
+            log.info(requestMessageCreated.toJson());
+            gameSessionService.SendMessageToSession(requestMessage.getId(), requestMessageCreated.toJson());
         }
 
         log.info("Adding player " + webSocketSession.getId() + " " + requestMessage.getId());
