@@ -2,24 +2,22 @@ package az.evilcastle.turnbased.Repo;
 
 import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
+import az.evilcastle.turnbased.enums.ActionType;
 import az.evilcastle.turnbased.enums.GameStatus;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 @Component
-@Log4j2
+@Slf4j
 public class GameSessionOnMemoryRepo {
     private GameSessionService gameSessionService;
-    private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>();
+    private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>(); // TODO change type to UUID
     private static final ConcurrentMap<String, Long> players = new ConcurrentReferenceHashMap<>();
 
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage, GameSessionService gss) {
@@ -51,7 +49,7 @@ public class GameSessionOnMemoryRepo {
         if (gameSession.getWebSocketSessions().size()>0){
             gameSession.setGameStatus(GameStatus.STARTED);
             RequestMessage rm = RequestMessage.builder()
-                    .type("CONNECTION")
+                    .type(ActionType.CONNECTION)
                     .payload("game started")
                     .build();
 
@@ -100,13 +98,13 @@ public class GameSessionOnMemoryRepo {
     }
 
     public void printAllSessions(Long id){
-        System.out.println(gameSessions.get(id));
+        log.info(gameSessions.get(id).toString());
     }
     public GameSession getUsersSession(String sessionKey){
 
         Long sessionId = players.get(sessionKey);
-        System.out.println("session id is " + sessionId);
-        System.out.println(gameSessions.get(sessionId).getId());
+        log.info("session id is " + sessionId);
+        log.info(String.valueOf(gameSessions.get(sessionId).getId()));
         return gameSessions.get(sessionId);
     }
 }

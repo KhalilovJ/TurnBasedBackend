@@ -18,12 +18,14 @@ public class MoveEntity {
     String action;
     @JsonProperty("where")
     String where;
+    String secondary;
 
     public String toJson(String divider){
 
         String st =  "{*who*:*" + who + "*," +
                 "*action*:*" + action + "*," +
                 "*userId*:*" + userId + "*," +
+                "*secondary*:*" + secondary + "*," +
                 "*where*:*" + where +"*}";
 
         st = st.replace("*", divider);
