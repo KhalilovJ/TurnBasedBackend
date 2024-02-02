@@ -1,8 +1,6 @@
 package az.evilcastle.turnbased.entities;
 
-import az.evilcastle.turnbased.enums.MessageType;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import az.evilcastle.turnbased.enums.ActionType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class RequestMessage {
 
     long id;
-    String type;
+    ActionType type;
     String payload;
 
     public String toJson(){
