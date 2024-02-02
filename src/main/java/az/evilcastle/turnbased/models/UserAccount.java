@@ -1,4 +1,4 @@
-package az.evilcastle.turnbased.entities;
+package az.evilcastle.turnbased.models;
 
 import jakarta.persistence.*;
 import lombok.*;

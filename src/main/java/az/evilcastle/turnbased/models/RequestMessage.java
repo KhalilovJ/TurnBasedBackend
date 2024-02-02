@@ -1,4 +1,4 @@
-package az.evilcastle.turnbased.entities;
+package az.evilcastle.turnbased.models;
 
 import az.evilcastle.turnbased.enums.GameActionType;
 import lombok.*;

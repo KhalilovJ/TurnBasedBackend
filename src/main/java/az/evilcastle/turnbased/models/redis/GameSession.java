@@ -1,7 +1,6 @@
-package az.evilcastle.turnbased.entities.redis;
+package az.evilcastle.turnbased.models.redis;
 
 import az.evilcastle.turnbased.enums.GameStatus;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

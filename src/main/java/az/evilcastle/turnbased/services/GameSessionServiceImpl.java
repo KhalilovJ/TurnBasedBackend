@@ -1,9 +1,9 @@
 package az.evilcastle.turnbased.services;
 
 import az.evilcastle.turnbased.Repo.GameSessionOnMemoryRepo;
-import az.evilcastle.turnbased.entities.MoveEntity;
-import az.evilcastle.turnbased.entities.RequestMessage;
-import az.evilcastle.turnbased.entities.redis.GameSession;
+import az.evilcastle.turnbased.models.MoveEntity;
+import az.evilcastle.turnbased.models.RequestMessage;
+import az.evilcastle.turnbased.models.redis.GameSession;
 import az.evilcastle.turnbased.enums.GameActionType;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.core.JsonProcessingException;

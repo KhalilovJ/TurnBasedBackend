@@ -1,6 +1,6 @@
 package az.evilcastle.turnbased.handlers;
 
-import az.evilcastle.turnbased.entities.RequestMessage;
+import az.evilcastle.turnbased.models.RequestMessage;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

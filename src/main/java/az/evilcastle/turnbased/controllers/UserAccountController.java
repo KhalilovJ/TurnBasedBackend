@@ -1,9 +1,8 @@
 package az.evilcastle.turnbased.controllers;
 
-import az.evilcastle.turnbased.entities.UserAccount;
+import az.evilcastle.turnbased.models.UserAccount;
 import az.evilcastle.turnbased.services.interfaces.UserAccountService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

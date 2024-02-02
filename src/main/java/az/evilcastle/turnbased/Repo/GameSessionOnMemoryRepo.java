@@ -1,7 +1,7 @@
 package az.evilcastle.turnbased.Repo;
 
-import az.evilcastle.turnbased.entities.RequestMessage;
-import az.evilcastle.turnbased.entities.redis.GameSession;
+import az.evilcastle.turnbased.models.RequestMessage;
+import az.evilcastle.turnbased.models.redis.GameSession;
 import az.evilcastle.turnbased.enums.GameActionType;
 import az.evilcastle.turnbased.enums.GameStatus;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
@@ -47,7 +47,7 @@ public class GameSessionOnMemoryRepo {
 //        gameSession.getWebSocketSessions().add(webSocketSession);
 //        gameSession.getSocketSessions().add(webSocketSession.getId());
 
-        if (gameSession.getWebSocketSessions().size() > 0) {
+        if (!gameSession.getWebSocketSessions().isEmpty()) {
             gameSession.setGameStatus(GameStatus.STARTED);
             RequestMessage rm = RequestMessage.builder()
                     .type(GameActionType.CONNECTION)
