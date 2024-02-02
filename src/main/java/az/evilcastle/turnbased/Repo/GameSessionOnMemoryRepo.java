@@ -2,7 +2,7 @@ package az.evilcastle.turnbased.Repo;
 
 import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
-import az.evilcastle.turnbased.enums.ActionType;
+import az.evilcastle.turnbased.enums.GameActionType;
 import az.evilcastle.turnbased.enums.GameStatus;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class GameSessionOnMemoryRepo {
         if (gameSession.getWebSocketSessions().size()>0){
             gameSession.setGameStatus(GameStatus.STARTED);
             RequestMessage rm = RequestMessage.builder()
-                    .type(ActionType.CONNECTION)
+                    .type(GameActionType.CONNECTION)
                     .payload("game started")
                     .build();
 

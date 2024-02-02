@@ -4,7 +4,7 @@ import az.evilcastle.turnbased.Repo.GameSessionOnMemoryRepo;
 import az.evilcastle.turnbased.entities.MoveEntity;
 import az.evilcastle.turnbased.entities.RequestMessage;
 import az.evilcastle.turnbased.entities.redis.GameSession;
-import az.evilcastle.turnbased.enums.ActionType;
+import az.evilcastle.turnbased.enums.GameActionType;
 import az.evilcastle.turnbased.services.interfaces.GameSessionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,7 +102,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
         String msg = moveEntity.toJson("*");
         log.info("Message " + msg);
-        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type(ActionType.GAMEACTION).payload(msg).build().toJson());
+        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type(GameActionType.GAMEACTION).payload(msg).build().toJson());
 
 //        System.out.println(moveEntity + " sessionId: " +  userId);
     }

@@ -1,6 +1,6 @@
 package az.evilcastle.turnbased.enums;
 
-public enum ActionType {
+public enum GameActionType {
     CREATE,
     CONNECTION,
     GAMEACTION

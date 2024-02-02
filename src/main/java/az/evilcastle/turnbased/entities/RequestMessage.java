@@ -1,6 +1,6 @@
 package az.evilcastle.turnbased.entities;
 
-import az.evilcastle.turnbased.enums.ActionType;
+import az.evilcastle.turnbased.enums.GameActionType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class RequestMessage {
 
     long id;
-    ActionType type;
+    GameActionType type;
     String payload;
 
     public String toJson(){
