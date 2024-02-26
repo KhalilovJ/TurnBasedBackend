@@ -1,6 +1,8 @@
 package az.evilcastle.turnbased.models;
 
 import az.evilcastle.turnbased.enums.GameActionType;
+import az.evilcastle.turnbased.mappers.GameActionTypeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,10 +10,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestMessage {
 
     long id;
+    @JsonDeserialize(using = GameActionTypeDeserializer.class)
     GameActionType type;
     String payload;
 
