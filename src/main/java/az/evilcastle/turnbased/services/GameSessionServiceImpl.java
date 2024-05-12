@@ -15,6 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 @Service
@@ -28,7 +29,9 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public void join(WebSocketSession webSocketSession, RequestMessage requestMessage) {
+        var playerId = UUID.randomUUID();
         gameSessionOnMemoryRepo.addGameSession(webSocketSession, requestMessage, this);
+        sendMessageToSocket(webSocketSession, playerId.toString(), GameActionType.CONNECTION);
     }
 
     @Override
@@ -45,12 +48,12 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public ConcurrentMap<Long, GameSession> getAllGameSession() {
+    public ConcurrentMap<String, GameSession> getAllGameSession() {
         return gameSessionOnMemoryRepo.getAllActiveGameSessions();
     }
 
     @Override
-    public GameSession getGameSession(Long id) {
+    public GameSession getGameSession(String id) {
         GameSession gs = gameSessionOnMemoryRepo.getGameSession(id);
         log.info(id + "game session test: " + gs);
         gameSessionOnMemoryRepo.printAllSessions(id);
@@ -64,17 +67,17 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public void removeGameSession(long id) {
+    public void removeGameSession(String id) {
         gameSessionOnMemoryRepo.removeGameSession(id);
     }
 
     @Override
-    public ConcurrentMap<String, Long> getAllActivePlayers() {
+    public ConcurrentMap<String, String> getAllActivePlayers() {
         return gameSessionOnMemoryRepo.getAllActivePlayers();
     }
 
     @Override
-    public void SendMessageToSession(Long sessionId, String message) {
+    public void sendMessageToSession(String sessionId, String message) {
         GameSession gs = gameSessionOnMemoryRepo.getGameSession(sessionId);
         gs.getWebSocketSessions().forEach(s-> {
             try {
@@ -83,6 +86,18 @@ public class GameSessionServiceImpl implements GameSessionService {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Override
+    public void sendMessageToSocket(WebSocketSession webSocketSession, String message, GameActionType gameActionType) {
+        var requestMessage = new RequestMessage();
+        requestMessage.setType(gameActionType);
+        requestMessage.setPayload(message);
+        try {
+            webSocketSession.sendMessage(new TextMessage(requestMessage.toJson()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -102,7 +117,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
         String msg = moveEntity.toJson("*");
         log.info("Message " + msg);
-        SendMessageToSession(gameSession.getId(), RequestMessage.builder().type(GameActionType.GAMEACTION).payload(msg).build().toJson());
+        sendMessageToSession(gameSession.getId(), RequestMessage.builder().type(GameActionType.GAMEACTION).payload(msg).build().toJson());
 
 //        System.out.println(moveEntity + " sessionId: " +  userId);
     }

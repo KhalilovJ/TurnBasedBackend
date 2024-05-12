@@ -16,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameSession {
 
-    long id;
+    String id;
     GameStatus gameStatus;
 //    List<String> socketSessions;
     @JsonIgnore

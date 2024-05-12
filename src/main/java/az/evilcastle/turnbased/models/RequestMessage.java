@@ -12,12 +12,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class RequestMessage {
 
-    long id;
+    String playerInGameId;
     @JsonDeserialize(using = GameActionTypeDeserializer.class)
     GameActionType type;
     String payload;
 
     public String toJson(){
-        return "{\"id\":\"" + id + "\"," + "\"type\":\"" + type + "\"," + "\"payload\":\"" + payload + "\"}";
+        return "{\"id\":\"" + playerInGameId + "\"," + "\"type\":\"" + type + "\"," + "\"payload\":\"" + payload + "\"}";
     }
 }

@@ -12,14 +12,16 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
 @Component
 @Slf4j
 public class GameSessionOnMemoryRepo {
+
     private GameSessionService gameSessionService;
-    private static final ConcurrentMap<Long, GameSession> gameSessions = new ConcurrentReferenceHashMap<>(); // TODO change type to UUID
-    private static final ConcurrentMap<String, Long> players = new ConcurrentReferenceHashMap<>();
+    private static final ConcurrentMap<String, GameSession> gameSessions = new ConcurrentReferenceHashMap<>(); // TODO change type to UUID
+    private static final ConcurrentMap<String, String> players = new ConcurrentReferenceHashMap<>();
 
     public void addGameSession(WebSocketSession webSocketSession, RequestMessage requestMessage, GameSessionService gss) {
 
@@ -27,9 +29,9 @@ public class GameSessionOnMemoryRepo {
             gameSessionService = gss;
         }
 
-        long id = requestMessage.getId();
+        String id =requestMessage.getPlayerInGameId();
 
-        gameSessions.putIfAbsent(id, GameSession.builder()
+        gameSessions.putIfAbsent(UUID.randomUUID().toString(), GameSession.builder()
                 .id(id)
                 .webSocketSessions(new ArrayList<>())
                 .webSocketSessionHashMap(new HashMap<>())
@@ -42,7 +44,7 @@ public class GameSessionOnMemoryRepo {
 
     public void addPlayer(WebSocketSession webSocketSession, RequestMessage requestMessage) {
 
-        GameSession gameSession = gameSessions.get(requestMessage.getId());
+        GameSession gameSession = gameSessions.get(requestMessage.getPlayerInGameId());
 
 //        gameSession.getWebSocketSessions().add(webSocketSession);
 //        gameSession.getSocketSessions().add(webSocketSession.getId());
@@ -57,31 +59,31 @@ public class GameSessionOnMemoryRepo {
 //            GameSession usersSession = getUsersSession(webSocketSession.getId());
 
             log.info(requestMessageCreated.toJson());
-            gameSessionService.SendMessageToSession(requestMessage.getId(), requestMessageCreated.toJson());
+            gameSessionService.sendMessageToSession(requestMessage.getPlayerInGameId(), requestMessageCreated.toJson());
         }
 
-        log.info("Adding player " + webSocketSession.getId() + " " + requestMessage.getId());
+        log.info("Adding player " + webSocketSession.getId() + " " + requestMessage.getPlayerInGameId());
 
         gameSession.addWebSocketSession(webSocketSession, gameSession.getWebSocketSessions().size());
 
-        players.put(webSocketSession.getId(), requestMessage.getId());
+        players.put(webSocketSession.getId(), requestMessage.getPlayerInGameId());
     }
 
-    public ConcurrentMap<Long, GameSession> getAllActiveGameSessions() {
+    public ConcurrentMap<String, GameSession> getAllActiveGameSessions() {
         return gameSessions;
     }
 
-    public ConcurrentMap<String, Long> getAllActivePlayers() {
+    public ConcurrentMap<String, String> getAllActivePlayers() {
         return players;
     }
 
-    public GameSession getGameSession(Long id) {
+    public GameSession getGameSession(String id) {
         return gameSessions.get(id);
     }
 
     public void removePlayer(WebSocketSession webSocketSession) {
         String playerId = webSocketSession.getId();
-        long gameSessionId = players.get(playerId);
+        String gameSessionId = players.get(playerId);
 
         var sessions = gameSessions.get(gameSessionId).getWebSocketSessions();
 
@@ -91,17 +93,17 @@ public class GameSessionOnMemoryRepo {
         if (sessions.isEmpty()) removeGameSession(gameSessionId);
     }
 
-    public void removeGameSession(long id) {
+    public void removeGameSession(String id) {
         gameSessions.remove(id);
     }
 
-    public void printAllSessions(Long id) {
+    public void printAllSessions(String id) {
         log.info(gameSessions.get(id).toString());
     }
 
     public GameSession getUsersSession(String sessionKey) {
 
-        Long sessionId = players.get(sessionKey);
+        String sessionId = players.get(sessionKey);
         log.info("session id is " + sessionId);
         log.info(String.valueOf(gameSessions.get(sessionId).getId()));
         return gameSessions.get(sessionId);
